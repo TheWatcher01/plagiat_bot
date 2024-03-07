@@ -1,0 +1,23 @@
+# OSINT ToolsBox
+"""
+That's a collection of tools for OSINT (Open Source Intelligence) research.
+
+The tools are divided into categories:
+
+- Social Media
+- Email
+- Phone
+- Domain
+- IP
+- Username
+- Name
+- Location
+- Image
+- File
+- Code
+- Company
+- Job
+- Crypto
+- Hacking
+- Other
+"""
