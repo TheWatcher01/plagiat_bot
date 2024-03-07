@@ -1,1 +1,0 @@
-That's the anti plagiarism check bot project!
