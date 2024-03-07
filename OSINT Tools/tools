@@ -21,3 +21,61 @@ The tools are divided into categories:
 - Hacking
 - Other
 """
+-------------------------------------------------------------------------------------
+.py
+Social Media Intelligence (SOCMINT):
+https://github.com/qeeqbox/social-analyzer.git
+https://github.com/twintproject/twint.git
+https://github.com/Lissy93/web-check.git
+
+Framework for OSINT:
+https://github.com/sherlock-project/sherlock.git
+
+Framework for OSINT using Google Dorks:
+https://github.com/mxrch/GHunt.git
+
+
+
+https://github.com/lanmaster53/recon-ng.git
+https://github.com/ilektrojohn/creepy.git
+https://github.com/defaultnamehere/zzzzz.git
+https://github.com/jofpin/trape.git
+
+https://github.com/martinvigo/email2phonenumber.git
+https://github.com/smicallef/spiderfoot.git
+https://github.com/Datalux/Osintgram.git
+
+https://demo.facia.ai/services
+-------------------------------------------------------------------------------------
+.js
+Social Media Intelligence (SOCMINT):
+https://github.com/abrahamjuliot/creepjs.git
+
+https://github.com/arank/marauders-map.git
+
+-------------------------------------------------------------------------------------
+
+.c
+https://github.com/MinhasKamal/CreepyCodeCollection.git
+
+-------------------------------------------------------------------------------------
+.go
+
+https://github.com/evilsocket/xray.git
+
+Google Dorking
+https://github.com/1N3/Goohak.git
+
+.*
+https://github.com/owasp-amass/amass.git
+https://github.com/kennbroorg/iKy.git
+
+
+IMINT (Imagery Intelligence):
+https://github.com/TadasBaltrusaitis/OpenFace.git
+
+
+
+
+Framework for OSINT:
+https://github.com/UndeadSec/SwaggerSpy.git
