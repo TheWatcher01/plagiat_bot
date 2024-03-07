@@ -6,16 +6,44 @@
 """
 
 
+import asyncio
 from typing import Dict, List
 from github import Repository
 from asyncio import sleep
 import components
 import difflib
+import json
 
 
 users = [
+    "NidiMeliodas",
+    "tercsam",
+    "mathpvx",
+    "Arweenn",
+    "Jonathan-Ismael",
+    "Kayme976",
+    "Fiegsy",
+    "manonadore",
+    "ozzycloclo0524",
+    "benjaminparentt",
+    "mistWil",
+    "Spacefox95",
+    "GillesR76",
+    "Rdrg974",
+    "jennat",
+    "Julieed-971",
+    "chloe0524",
+    "Rui65",
+    "yass",
+    "valhello45",
     "JustGodWork",
     "TheWatcher01",
+    "ken2201",
+    "ruthfonsecass",
+    "Adolberton",
+    "Letho1972",
+    "kjuarez38",
+    "CamFav"
 ]
 
 
@@ -71,6 +99,10 @@ class RepoScanner:
                             t_name = target_file.name
                             t_path = target_file.path
                             if (name == t_name and file.path == t_path):
+                                user_name = repository.owner.login
+                                target_name = target_repository.owner.login
+                                print(f"user: {user_name}")
+                                print(f"target: {target_name}")
                                 print(f"Starting scan of {path}/{file.name}")
                                 diff = difflib.SequenceMatcher(
                                     None,
@@ -95,20 +127,50 @@ class RepoScanner:
         except Exception as err:
             print(f"Error: {err}")
 
-    def check_by_repo(self, repo_name: str) -> List:
+    async def check_by_repo(self, repo_name: str) -> List:
         user_repos = self.get_repository(repo_name)
         if (len(user_repos) < 2):
             return []
-        for user_repo in user_repos:
-            for target_repo in user_repos:
-                if (user_repo == target_repo):
-                    continue
-                self.check_file(user_repo.repository, target_repo.repository)
+        for i in range(len(user_repos)):
+            for j in range(len(user_repos)):
+                if (i != j):
+                    await sleep(1)
+                    self.check_file(
+                        user_repos[i].repository,
+                        user_repos[j].repository
+                    )
 
-    def start_scan(self):
+    async def start_scan(self, repository: str = None):
         self.sort_repositories()
-        # for repo in self.repos_by_name:
-        #     print(f"Checking {repo}...")
-        #     self.check_by_repo(repo)
-        self.check_by_repo("holbertonschool-network")
-        return self.ratios
+        if (repository is not None):
+            await self.check_by_repo(repository)
+        for repo in self.repos_by_name:
+            print(f"Checking {repo}...")
+            await self.check_by_repo(repo)
+        self.save()
+
+    async def start_scan_from_last(self):
+        self.sort_repositories()
+        for repo in reversed(list(self.repos_by_name.keys())):
+            print(f"Checking {repo}...")
+            await self.check_by_repo(repo)
+        self.save()
+
+    def save(self):
+        try:
+            with open("cache.json", "w") as file:
+                obj_json: Dict[str, List] = {}
+                for plagiarism in components.PlagiarismRatio.get_all():
+                    username = plagiarism.user.login
+                    if (username not in obj_json):
+                        obj_json[username] = []
+                    obj_json[username].append({
+                        "username": username,
+                        "targetname": plagiarism.target.login,
+                        "repository_name": plagiarism.repository.name,
+                        "filepath": plagiarism.filepath,
+                        "ratio": plagiarism.ratio
+                    })
+                json.dump(obj=obj_json, fp=file)
+        except Exception as err:
+            print(f"Error: {err}")

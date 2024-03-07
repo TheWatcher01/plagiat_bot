@@ -7,9 +7,8 @@
 
 
 import cmd
-import json
+import asyncio
 import components
-from typing import Dict, List
 
 
 class PlagiatBot(cmd.Cmd):
@@ -21,7 +20,10 @@ class PlagiatBot(cmd.Cmd):
         pass
 
     def do_help(self, arg):
-        """Display help information"""
+        """
+            Display help information
+            Usage: help <command?>
+        """
         if arg:
             # If the argument is a known command, display its help text
             try:
@@ -38,31 +40,53 @@ class PlagiatBot(cmd.Cmd):
                 print(command)
             print("Use 'help <command>' to get more info about a command.")
 
-    def do_check(self, arg):
-        """Check for plagiarism"""
+    def do_check(self, arg: str):
+        """
+            Check for plagiarism in all repositories
+            Usage: check
+        """
         print("Checking for plagiarism...")
         print("This can take a while, please wait...")
         scanner = components.RepoScanner()
-        scanner.start_scan()
-        try:
-            with open("cache.json", "w") as file:
-                obj_json: Dict[str, List] = {}
-                for plagiarism in components.PlagiarismRatio.get_all():
-                    username = plagiarism.user.login
-                    if (username not in obj_json):
-                        obj_json[username] = []
-                    obj_json[username].append({
-                        "username": username,
-                        "targetname": plagiarism.target.login,
-                        "repository_name": plagiarism.repository.name,
-                        "filepath": plagiarism.filepath,
-                        "ratio": plagiarism.ratio
-                    })
-                json.dump(obj=obj_json, fp=file)
-        except Exception as err:
-            print(f"Error: {err}")
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(scanner.start_scan())
         print("Done!")
+
+    def do_check_from_last(self, arg: str):
+        """
+            Check for plagiarism in all repositories (reverse order)
+            Usage: check_from_last
+        """
+        print("Checking for plagiarism...")
+        print("This can take a while, please wait...")
+        scanner = components.RepoScanner()
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(scanner.start_scan_from_last())
+        print("Done!")
+
+    def check_repo(self, arg: str):
+        """
+            Check for plagiarism in a specific repository
+            Usage: check_repo <repository_name>
+        """
+        if (arg):
+            args = arg.split()
+            try:
+                print(f"Checking for plagiarism in {args[0]}...")
+                print("This can take a while, please wait...")
+                scanner = components.RepoScanner()
+                loop = asyncio.get_event_loop()
+                loop.run_until_complete(scanner.start_scan(args[0]))
+                print("Done!")
+            except IndexError as err:
+                print(f"Error: {err}")
+        else:
+            print("Error: Missing repository name")
 
 
 if (__name__ == "__main__"):
-    PlagiatBot().cmdloop()
+    try:
+        PlagiatBot().cmdloop()
+    except Exception as e:
+        print(f"\033[91mError in cmdLoop: {e}\033[0m")
+        exit()
